@@ -4,6 +4,8 @@
  */
 package br.com.saks.biblioteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -23,7 +25,8 @@ import lombok.Data;
  * @author Paola Zanella
  */
 @Entity
-@Data
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Data 
 public class Emprestimo {
 
     @Id
