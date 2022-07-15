@@ -1,0 +1,9 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/biblioteca
+        username: postgres
+        password: room
+    jpa:
+        hibernate:
+            ddlAuto: update
+        showSql: true
