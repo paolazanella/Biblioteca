@@ -13,28 +13,54 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import br.com.saks.biblioteca.repository.EmprestimoRepossitory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author Paola Zanella
  */
+@RestController
+@RequestMapping("/emprestimos")
 public class EmprestimoController {
   
-    @Autowired
-    private EmprestimoRepossitory livroRepository;
-    
+  @Autowired
+    private EmprestimoRepossitory emprestimoRepository;
+
     @GetMapping
     public List<Emprestimo> listarTodos() {
-        return livroRepository.findAll();
+        return emprestimoRepository.findAll();
     }
-    
+
     @GetMapping(value="/{id}")
     public Optional<Emprestimo> listarPeloId(@PathVariable Long id) {
-        return livroRepository.findById(id);
+        return emprestimoRepository.findById(id);
     }
-    
+
     @PostMapping
-    public Emprestimo adicionar(@RequestBody Emprestimo livro) {
-        return livroRepository.save(livro);
+    public Emprestimo adicionar(@RequestBody Emprestimo emprestimo) {
+        return emprestimoRepository.save(emprestimo);
+    }
+
+    @PutMapping(value="/{id}")
+    public ResponseEntity editar(@PathVariable Long id, @RequestBody Emprestimo emprestimo) {
+        return emprestimoRepository.findById(id)
+                .map(record -> {
+                    record.setStatus(emprestimo.getStatus());
+                    Emprestimo emprestimoUpdated = emprestimoRepository.save(record);
+                    return ResponseEntity.ok().body(emprestimoUpdated);
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping(value="/{id}")
+    public ResponseEntity deletar(@PathVariable Long id) {
+        return emprestimoRepository.findById(id)
+                .map(record-> {
+                    emprestimoRepository.deleteById(id);
+                    return ResponseEntity.ok().build();
+                }).orElse(ResponseEntity.notFound().build());
     }
     
  
